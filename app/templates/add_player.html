@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header" style="background: linear-gradient(90deg, var(--uga-red), var(--uga-black)); color: white;">
+                    <h3 class="mb-0" style="color: white !important;">🐶 Add New Georgia Football Player</h3>
+                </div>
+                <div class="card-body">
+                    <form action="{{ url_for('players.add_player') }}" method="post">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="jersey_number">Jersey Number:</label>
+                                    <input type="text" class="form-control" id="jersey_number" name="jersey_number" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="full_name">Full Name:</label>
+                                    <input type="text" class="form-control" id="full_name" name="full_name" required>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="position">Position:</label>
+                                    <input type="text" class="form-control" id="position" name="position" required>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="height">Height:</label>
+                                    <input type="text" class="form-control" id="height" name="height" placeholder="e.g., 6'2&quot;" required>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="weight">Weight (lbs):</label>
+                                    <input type="number" class="form-control" id="weight" name="weight" placeholder="lbs" required>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="year_class">Year/Class:</label>
+                                    <select class="form-control" id="year_class" name="year_class" required>
+                                        <option value="">Select Year</option>
+                                        <option value="Fr.">Freshman (Fr.)</option>
+                                        <option value="R-Fr.">Redshirt Freshman (R-Fr.)</option>
+                                        <option value="So.">Sophomore (So.)</option>
+                                        <option value="R-So.">Redshirt Sophomore (R-So.)</option>
+                                        <option value="Jr.">Junior (Jr.)</option>
+                                        <option value="R-Jr.">Redshirt Junior (R-Jr.)</option>
+                                        <option value="Sr.">Senior (Sr.)</option>
+                                        <option value="R-Sr.">Redshirt Senior (R-Sr.)</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="hometown">Hometown:</label>
+                                    <input type="text" class="form-control" id="hometown" name="hometown" placeholder="City, State" required>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="high_school">High School:</label>
+                                    <input type="text" class="form-control" id="high_school" name="high_school" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="previous_school">Previous School (Optional):</label>
+                                    <input type="text" class="form-control" id="previous_school" name="previous_school" placeholder="If transfer student">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group text-center mt-4">
+                            <a href="{{ url_for('players.show_players') }}" class="btn btn-secondary mr-3">
+                                <i class="fas fa-arrow-left"></i> Cancel
+                            </a>
+                            <button type="submit" class="btn btn-success">
+                                <i class="fas fa-plus"></i> Add Player
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .btn-success {
+        background: linear-gradient(45deg, var(--uga-red), #dc2626);
+        border: none;
+        border-radius: 25px;
+        padding: 0.5rem 1.5rem;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-success:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(186, 12, 47, 0.3);
+    }
+    
+    .card {
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        border: none;
+        border-radius: 15px;
+    }
+    
+    .form-control:focus {
+        border-color: var(--uga-red);
+        box-shadow: 0 0 0 0.2rem rgba(186, 12, 47, 0.25);
+    }
+</style>
+{% endblock %}

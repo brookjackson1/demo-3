@@ -2,25 +2,25 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>GCSU MIS Starter Kit</title>
+    <title>UGA Football Roster</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         :root {
-            --gcsu-blue: #003399;
-            --gcsu-green: #006633;
-            --gcsu-light-blue: #e6f2ff;
-            --gcsu-light-green: #e6f7e6;
+            --uga-red: #BA0C2F;
+            --uga-black: #000000;
+            --uga-light-red: #f8d7da;
+            --uga-light-gray: #f8f9fa;
         }
         
         body {
-            background: linear-gradient(135deg, var(--gcsu-light-blue) 0%, #ffffff 50%, var(--gcsu-light-green) 100%);
+            background: linear-gradient(135deg, var(--uga-light-red) 0%, #ffffff 50%, var(--uga-light-gray) 100%);
             min-height: 100vh;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         
         .navbar-gcsu {
-            background: linear-gradient(90deg, var(--gcsu-blue) 0%, var(--gcsu-green) 100%);
+            background: linear-gradient(90deg, var(--uga-red) 0%, var(--uga-black) 100%);
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             padding: 1rem 0;
         }
@@ -68,12 +68,12 @@
         }
         
         .alert-success {
-            background: linear-gradient(45deg, var(--gcsu-green), #28a745);
+            background: linear-gradient(45deg, var(--uga-red), #dc2626);
             color: white;
         }
         
         .btn-primary {
-            background: linear-gradient(45deg, var(--gcsu-blue), var(--gcsu-green));
+            background: linear-gradient(45deg, var(--uga-red), var(--uga-black));
             border: none;
             border-radius: 25px;
             padding: 0.5rem 1.5rem;
@@ -83,7 +83,7 @@
         
         .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0, 51, 153, 0.3);
+            box-shadow: 0 4px 8px rgba(186, 12, 47, 0.3);
         }
         
         .card {
@@ -98,7 +98,8 @@
         }
         
         h1, h2, h3 {
-            color: var(--gcsu-blue);
+            color: var(--uga-red);
+            font-weight: bold;
         }
         
         .table {
@@ -108,7 +109,7 @@
         }
         
         .table thead th {
-            background: linear-gradient(90deg, var(--gcsu-blue), var(--gcsu-green));
+            background: linear-gradient(90deg, var(--uga-red), var(--uga-black));
             color: white;
             border: none;
             font-weight: 600;
@@ -118,18 +119,23 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-gcsu">
         <a class="navbar-brand" href="{{ url_for('index') }}">
-            <i class="fas fa-home me-2"></i>GCSU MIS Starter Kit
+            🐶 UGA Football Roster
         </a>
         <div class="collapse navbar-collapse">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('about') }}">
-                        <i class="fas fa-info-circle me-1"></i>About
+                    <a class="nav-link" href="{{ url_for('players.show_players') }}">
+                        <i class="fas fa-football me-1"></i>Football Roster
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url_for('examples.show_examples') }}">
                         <i class="fas fa-database me-1"></i>Examples
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('about') }}">
+                        <i class="fas fa-info-circle me-1"></i>About
                     </a>
                 </li>
             </ul>

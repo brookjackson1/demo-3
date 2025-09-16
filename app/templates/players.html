@@ -1,0 +1,331 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <h1>🐶 Georgia Bulldogs Football Roster 2025</h1>
+    <p class="lead text-muted">Complete roster for the University of Georgia football team</p>
+
+
+<div class="container mt-4">
+    <a class="btn btn-primary" href="{{ url_for('players.show_players') }}">Show All Players</a>
+    <a class="btn btn-success ml-2" href="{{ url_for('players.add_player') }}">
+        <i class="fas fa-plus"></i> Add Player
+    </a>
+    <table id="data-table" class="table table-striped table-bordered mt-4">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Jersey #</th>
+                <th>Name</th>
+                <th>Position</th>
+                <th>Height</th>
+                <th>Weight</th>
+                <th>Year</th>
+                <th>Hometown</th>
+                <th>High School</th>
+                <th>Previous School</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{ table | safe }}
+        </tbody>
+    </table>
+</div>
+
+<!-- Edit Modal -->
+{% if request.args.get('edit_id') %}
+<div class="modal fade show" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" style="display: block;" aria-modal="true">
+{% else %}
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+{% endif %}
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="editModalLabel">Edit Player</h5>
+        <a href="{{ url_for('players.show_players') }}" class="close" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </a>
+      </div>
+      <div class="modal-body">
+        {% if edit_player %}
+        <form action="{{ url_for('players.edit_player', player_id=edit_player.id) }}" method="post">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="editJerseyNumber">Jersey Number:</label>
+                <input type="text" class="form-control" id="editJerseyNumber" name="jersey_number" value="{{ edit_player.jersey_number }}" required>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="editFullName">Full Name:</label>
+                <input type="text" class="form-control" id="editFullName" name="full_name" value="{{ edit_player.full_name }}" required>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="editPosition">Position:</label>
+                <input type="text" class="form-control" id="editPosition" name="position" value="{{ edit_player.position }}" required>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="editHeight">Height:</label>
+                <input type="text" class="form-control" id="editHeight" name="height" value="{{ edit_player.height }}" required>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="editWeight">Weight:</label>
+                <input type="number" class="form-control" id="editWeight" name="weight" value="{{ edit_player.weight }}" required>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="editYearClass">Year/Class:</label>
+                <input type="text" class="form-control" id="editYearClass" name="year_class" value="{{ edit_player.year_class }}" required>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="editHometown">Hometown:</label>
+                <input type="text" class="form-control" id="editHometown" name="hometown" value="{{ edit_player.hometown }}" required>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="editHighSchool">High School:</label>
+                <input type="text" class="form-control" id="editHighSchool" name="high_school" value="{{ edit_player.high_school }}" required>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="editPreviousSchool">Previous School:</label>
+                <input type="text" class="form-control" id="editPreviousSchool" name="previous_school" value="{{ edit_player.previous_school or '' }}">
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <a href="{{ url_for('players.show_players') }}" class="btn btn-secondary">Cancel</a>
+            <button type="submit" class="btn btn-primary">Save Changes</button>
+          </div>
+        </form>
+        {% endif %}
+    </div>
+  </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+{% if request.args.get('delete_id') %}
+<div class="modal fade show" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" style="display: block;" aria-modal="true">
+{% else %}
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+{% endif %}
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteModalLabel">Confirm Delete</h5>
+        <a href="{{ url_for('players.show_players') }}" class="close" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </a>
+      </div>
+      <div class="modal-body">
+        {% if delete_player %}
+        <p>Are you sure you want to delete this player?</p>
+        <p><strong>Name:</strong> {{ delete_player.full_name }}</p>
+        <p><strong>Jersey Number:</strong> #{{ delete_player.jersey_number }}</p>
+        <p><strong>Position:</strong> {{ delete_player.position }}</p>
+        <p class="text-danger">This action cannot be undone.</p>
+      </div>
+      <div class="modal-footer">
+        <a href="{{ url_for('players.show_players') }}" class="btn btn-secondary">Cancel</a>
+        <form action="{{ url_for('players.delete_player', player_id=delete_player.id) }}" method="post" style="display: inline;">
+          <button type="submit" class="btn btn-danger">Delete</button>
+        </form>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Add Player Modal -->
+{% if request.args.get('add') %}
+<div class="modal fade show" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" style="display: block;" aria-modal="true" data-backdrop="static" data-keyboard="false">
+{% else %}
+<div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+{% endif %}
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addModalLabel">Add New Player</h5>
+        <a href="{{ url_for('players.show_players') }}" class="close" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </a>
+      </div>
+      <div class="modal-body">
+        <form action="{{ url_for('players.add_player') }}" method="post">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="addJerseyNumber">Jersey Number:</label>
+                <input type="text" class="form-control" id="addJerseyNumber" name="jersey_number" required>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="addFullName">Full Name:</label>
+                <input type="text" class="form-control" id="addFullName" name="full_name" required>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="addPosition">Position:</label>
+                <input type="text" class="form-control" id="addPosition" name="position" required>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="addHeight">Height:</label>
+                <input type="text" class="form-control" id="addHeight" name="height" placeholder="e.g., 6'2&quot;" required>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="addWeight">Weight:</label>
+                <input type="number" class="form-control" id="addWeight" name="weight" placeholder="lbs" required>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="addYearClass">Year/Class:</label>
+                <input type="text" class="form-control" id="addYearClass" name="year_class" placeholder="e.g., Fr., So., Jr., Sr." required>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="addHometown">Hometown:</label>
+                <input type="text" class="form-control" id="addHometown" name="hometown" placeholder="City, State" required>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="addHighSchool">High School:</label>
+                <input type="text" class="form-control" id="addHighSchool" name="high_school" required>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="addPreviousSchool">Previous School (Optional):</label>
+                <input type="text" class="form-control" id="addPreviousSchool" name="previous_school" placeholder="If transfer student">
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <a href="{{ url_for('players.show_players') }}" class="btn btn-secondary">Cancel</a>
+            <button type="submit" class="btn btn-success">Add Player</button>
+          </div>
+        </form>
+        </div>
+    </div>
+  </div>
+</div>
+
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css">
+
+<style>
+    .btn-success {
+        background: linear-gradient(45deg, var(--uga-red), #dc2626);
+        border: none;
+        border-radius: 25px;
+        padding: 0.5rem 1.5rem;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-success:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(186, 12, 47, 0.3);
+    }
+    
+    .btn-info {
+        background: linear-gradient(45deg, #6c757d, var(--uga-black));
+        border: none;
+        border-radius: 20px;
+        font-weight: 500;
+    }
+    
+    .btn-danger {
+        background: var(--uga-red);
+        border: none;
+        border-radius: 20px;
+        font-weight: 500;
+    }
+    
+    .modal-header {
+        background: linear-gradient(90deg, var(--uga-red), var(--uga-black));
+        color: white;
+    }
+    
+    .modal-title {
+        color: white !important;
+        font-weight: bold;
+    }
+    
+    .close {
+        color: white;
+        opacity: 1;
+    }
+    
+    .table tbody tr:hover {
+        background-color: var(--uga-light-red);
+    }
+    
+    .lead {
+        color: var(--uga-black) !important;
+        font-weight: 500;
+    }
+</style>
+
+{% endblock %}
+
+{% block scripts %}
+    <!--Include the DataTables JavaScript library-->
+    <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#data-table').DataTable({
+                "paging": true,
+                "ordering": true,
+                "info": true,
+                "searching": true,
+                "pageLength": 25,
+                "order": [[ 1, "asc" ]]  // Sort by jersey number by default
+            });
+            
+            // Debug form submission
+            $('form').on('submit', function(e) {
+                console.log('Form submitted:', $(this).attr('action'));
+                console.log('Form data:', $(this).serialize());
+            });
+            
+            // Ensure modal forms work properly
+            $('.modal form').on('submit', function(e) {
+                console.log('Modal form submitted');
+                // Don't prevent default - let form submit normally
+            });
+        });
+    </script>
+{% endblock %}
